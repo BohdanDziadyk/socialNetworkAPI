@@ -9,7 +9,6 @@ from .serializers import UserSerializer
 
 class UserLView(ListAPIView):
     serializer_class = UserSerializer
-    authentication_classes = [JWTAuthentication]
     queryset = UserModel.objects.all()
 
 
