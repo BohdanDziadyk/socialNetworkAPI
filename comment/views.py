@@ -28,6 +28,8 @@ class CommentRUDViewSpecial(RetrieveUpdateDestroyAPIView):
 
 
 class CommentLView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     serializer_class = CommentSeriallizer
     queryset = CommentModel.objects.all()
 
@@ -44,5 +46,7 @@ class CommentLView(ListAPIView):
 
 
 class CommentRView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     serializer_class = CommentSeriallizer
     queryset = CommentModel.objects.all()

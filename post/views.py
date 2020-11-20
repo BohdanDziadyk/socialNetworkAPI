@@ -27,6 +27,8 @@ class PostRUDViewSpecial(RetrieveUpdateDestroyAPIView):
 
 
 class PostLView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     serializer_class = PostSerializer
     queryset = PostModel.objects.all()
 
@@ -40,5 +42,7 @@ class PostLView(ListAPIView):
 
 
 class PostRView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     serializer_class = PostSerializer
     queryset = PostModel.objects.all()
