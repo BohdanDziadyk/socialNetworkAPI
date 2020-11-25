@@ -12,7 +12,9 @@ class CommentLCViewSpecial(ListCreateAPIView):
     serializer_class = CommentSeriallizer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        print(self.request.user.id)
+        serializer.save(user=self.request.user.id)
+        super().perform_create(serializer)
 
     def get_queryset(self):
         return CommentModel.objects.filter(user=self.request.user)

@@ -7,3 +7,4 @@ class PostSerializer(ModelSerializer):
     class Meta:
         model = PostModel
         fields = '__all__'
+        extra_kwargs = {'user': {'read_only': True}}
