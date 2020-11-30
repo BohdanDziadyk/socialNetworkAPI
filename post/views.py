@@ -1,5 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import PostModel
 from .serializers import PostSerializer
@@ -39,6 +40,10 @@ class PostLView(ListAPIView):
         if query:
             return qs.filter(user=query)
         return qs
+
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset().exclude(user=self.request.user.id)
+        return Response(PostSerializer(qs, many=True).data)
 
 
 class PostRView(RetrieveAPIView):

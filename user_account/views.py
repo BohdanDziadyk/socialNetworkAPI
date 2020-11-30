@@ -40,9 +40,16 @@ class UserPostsLCView(ListCreateAPIView):
         super().perform_create(serializer)
 
 
+class UserPostsRUDView(RetrieveUpdateDestroyAPIView):
+    serializer_class = PostSerializer
+    queryset = PostModel.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
 class UserCommentsLCView(ListCreateAPIView):
     serializer_class = CommentSeriallizer
-    queryset = CommentModel
+    queryset = CommentModel.objects.all()
     pagination_class = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
@@ -53,3 +60,10 @@ class UserCommentsLCView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         super().perform_create(serializer)
+
+
+class UserCommentsRUDView(RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSeriallizer
+    queryset = CommentModel.objects.all()
+    pagination_class = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
