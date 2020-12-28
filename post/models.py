@@ -16,7 +16,7 @@ class PostModel(models.Model):
 
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='post')
     title = models.CharField(max_length=255, blank=True)
-    body = models.CharField(max_length=255)
+    body = models.CharField(max_length=255, blank=True)
     image = models.ImageField(blank=True, upload_to=images_directory_path)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
