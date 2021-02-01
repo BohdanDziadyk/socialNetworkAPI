@@ -23,3 +23,4 @@ class UserRViewSpecial(RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()
+
