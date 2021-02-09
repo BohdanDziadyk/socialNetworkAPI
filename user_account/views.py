@@ -1,4 +1,6 @@
 from django.http import HttpResponse
+from django.db.models import Q
+
 # Create your views here.
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -10,8 +12,8 @@ from comment.models import CommentModel
 from comment.serializers import CommentSeriallizer
 from post.models import PostModel
 from post.serializers import PostSerializer
-from user.models import UserModel, FriendRequest
-from user.serializers import UserSerializer, FriendRequestSerializer
+from user.models import UserModel, FriendRequest, MessengerModel
+from user.serializers import UserSerializer, FriendRequestSerializer, MessengerSerializer
 
 
 class UserAccountRUDViewSpecial(RetrieveUpdateDestroyAPIView):
@@ -111,3 +113,35 @@ class FriendRequestRUDView(APIView):
             return HttpResponse("Friend request accepted")
         else:
             return HttpResponse("Friend request denied")
+
+
+class MessengerLCView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = MessengerSerializer
+    queryset = MessengerModel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        qs = MessengerModel.objects.filter(Q(sender_id=self.request.user.id) | Q(receiver_id=self.request.user.id))
+        return Response(MessengerSerializer(qs, many=True).data)
+
+    def perform_create(self, serializer):
+        user = UserModel.objects.get(id=self.request.user.id)
+        serializer.save(sender_id=self.request.user.id, sender_name=user.username)
+        super().perform_create(serializer)
+
+
+class MessengerRUDView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = MessengerSerializer
+    queryset = MessengerModel.objects.all()
+# class MessengerLView(ListAPIView):
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = [JWTAuthentication]
+#     serializer_class = MessengerSerializer
+#     queryset = MessengerModel.objects.all()
+#
+#     def list(self, request, *args, **kwargs):
+#         qs = self.get_queryset().filter(receiver_id=self.request.user.id)
+#         return Response(MessengerSerializer(qs, many=True).data)

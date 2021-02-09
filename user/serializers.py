@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import UserModel, FriendRequest
+from .models import UserModel, FriendRequest, MessengerModel
 
 
 class UserSerializer(ModelSerializer):
@@ -17,3 +17,11 @@ class FriendRequestSerializer(ModelSerializer):
     class Meta:
         model = FriendRequest
         fields = '__all__'
+
+
+class MessengerSerializer(ModelSerializer):
+    class Meta:
+        model = MessengerModel
+        fields = '__all__'
+        extra_kwargs = {'sender': {'read_only': True},
+                        'sender_name': {'read_only': True}}

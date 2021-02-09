@@ -23,3 +23,20 @@ class UserModel(AbstractUser):
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(UserModel, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(UserModel, related_name='to_user', on_delete=models.CASCADE)
+
+
+def images_directory_path(instance, filename):
+    return os.path.join(f'{instance.user.username}', 'messages', filename)
+
+
+class MessengerModel(models.Model):
+    class Meta:
+        db_table = "messenger"
+
+    sender = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="messages_send")
+    receiver = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="messages_received")
+    sender_name = models.CharField(max_length=20, blank=True)
+    body = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(blank=True, upload_to=images_directory_path)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
