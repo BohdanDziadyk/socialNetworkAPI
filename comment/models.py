@@ -17,6 +17,7 @@ class CommentModel(models.Model):
 
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='comment')
     post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name='comment')
+    username = models.CharField(max_length=20, blank=True, default='')
     body = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to=images_directory_path)
     created_at = models.DateTimeField(auto_now_add=True)

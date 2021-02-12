@@ -23,6 +23,7 @@ class UserModel(AbstractUser):
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(UserModel, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(UserModel, related_name='to_user', on_delete=models.CASCADE)
+    sender_name = models.CharField(max_length=20, blank=True)
 
 
 def images_directory_path(instance, filename):

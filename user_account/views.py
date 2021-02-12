@@ -38,7 +38,9 @@ class UserPostsLCView(ListCreateAPIView):
         return Response(PostSerializer(qs, many=True).data)
 
     def perform_create(self, serializer):
+        user = UserModel.objects.get(id=self.request.user.id)
         serializer.save(user=self.request.user)
+        serializer.save(username=user.username)
         super().perform_create(serializer)
 
 
@@ -60,7 +62,9 @@ class UserCommentsLCView(ListCreateAPIView):
         return Response(PostSerializer(qs, many=True).data)
 
     def perform_create(self, serializer):
+        user = UserModel.objects.get(id=self.request.user.id)
         serializer.save(user=self.request.user)
+        serializer.save(username=user.username)
         super().perform_create(serializer)
 
 
@@ -101,12 +105,15 @@ class FriendRequestCView(APIView):
 
     def post(self, request, userId):
         from_user = request.user
+        user = UserModel.objects.get(id=self.request.user.id)
         to_user = UserModel.objects.get(id=userId)
-        friend_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+        sender_name = user.username
+        friend_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user,
+                                                                      sender_name=sender_name)
         if created:
-            return HttpResponse("Friend request send")
+            return Response("Friend request send")
         else:
-            return HttpResponse("Friend request has been already send")
+            return Response("Friend request has been already send")
 
 
 class FriendRequestAcceptView(APIView):
@@ -121,9 +128,9 @@ class FriendRequestAcceptView(APIView):
             friend_request.to_user.friends.add(friend_request.from_user)
             friend_request.from_user.friends.add(friend_request.to_user)
             friend_request.delete()
-            return HttpResponse("Friend request accepted")
+            return Response("Friend request accepted")
         else:
-            return HttpResponse("An error has been occurred")
+            return Response("An error has been occurred")
 
 
 class FriendRequestDeniedView(APIView):
@@ -136,9 +143,9 @@ class FriendRequestDeniedView(APIView):
         friend_request = FriendRequest.objects.get(id=requestId)
         if friend_request.to_user == request.user:
             friend_request.delete()
-            return HttpResponse("Friend request denied")
+            return Response("Friend request denied")
         else:
-            return HttpResponse("An error has been occurred")
+            return Response("An error has been occurred")
 
 
 class UserFriendsDeleteView(APIView):
