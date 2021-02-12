@@ -82,7 +82,18 @@ class UserFriendsLView(ListAPIView):
         return Response(UserSerializer(user.friends, many=True).data)
 
 
-class FriendRequestLCView(APIView):
+class FriendRequestLView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = FriendRequestSerializer
+    queryset = FriendRequest.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        qs = FriendRequest.objects.filter(to_user=self.request.user.id)
+        return Response(FriendRequestSerializer(qs, many=True).data)
+
+
+class FriendRequestCView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = FriendRequestSerializer
@@ -98,7 +109,7 @@ class FriendRequestLCView(APIView):
             return HttpResponse("Friend request has been already send")
 
 
-class FriendRequestRUDView(APIView):
+class FriendRequestAcceptView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = FriendRequestSerializer
@@ -112,7 +123,36 @@ class FriendRequestRUDView(APIView):
             friend_request.delete()
             return HttpResponse("Friend request accepted")
         else:
+            return HttpResponse("An error has been occurred")
+
+
+class FriendRequestDeniedView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = FriendRequestSerializer
+    queryset = FriendRequest.objects.all()
+
+    def post(self, request, requestId):
+        friend_request = FriendRequest.objects.get(id=requestId)
+        if friend_request.to_user == request.user:
+            friend_request.delete()
             return HttpResponse("Friend request denied")
+        else:
+            return HttpResponse("An error has been occurred")
+
+
+class UserFriendsDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = UserSerializer
+    queryset = UserModel.objects.all()
+
+    def post(self, request, userId):
+        user = UserModel.objects.get(id=self.request.user.id)
+        user.friends.remove(userId)
+        friend = UserModel.objects.get(id=userId)
+        friend.friends.remove(self.request.user.id)
+        return Response("Friend successfully deleted")
 
 
 class MessengerLCView(ListCreateAPIView):
