@@ -27,7 +27,7 @@ class FriendRequest(models.Model):
 
 
 def images_directory_path(instance, filename):
-    return os.path.join(f'{instance.user.username}', 'messages', filename)
+    return os.path.join(f'{instance.sender.username}', 'messages', filename)
 
 
 class MessengerModel(models.Model):

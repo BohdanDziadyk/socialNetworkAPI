@@ -178,6 +178,18 @@ class MessengerLCView(ListCreateAPIView):
         super().perform_create(serializer)
 
 
+class MessengerChatView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    serializer_class = MessengerSerializer
+    queryset = MessengerModel.objects.all()
+
+    def get(self, request, userId):
+        qs = MessengerModel.objects.filter(Q(sender_id=self.request.user.id) | Q(receiver_id=self.request.user.id),
+                                           Q(sender_id=userId) | Q(receiver_id=userId))
+        return Response(MessengerSerializer(qs, many=True).data)
+
+
 class MessengerRUDView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
