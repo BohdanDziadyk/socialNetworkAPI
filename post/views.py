@@ -46,7 +46,7 @@ class PostLView(ListAPIView):
         return Response(PostSerializer(qs, many=True).data)
 
 
-class PostRView(RetrieveAPIView):
+class PostRView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = PostSerializer

@@ -38,6 +38,6 @@ class MessengerModel(models.Model):
     receiver = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="messages_received")
     sender_name = models.CharField(max_length=20, blank=True)
     body = models.CharField(max_length=255, blank=True)
-    image = models.ImageField(blank=True, upload_to=images_directory_path, default='')
+    image = models.ImageField(blank=True, upload_to=images_directory_path, default='', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

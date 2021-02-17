@@ -18,7 +18,7 @@ class UserLViewSpecial(ListAPIView):
         return Response(UserSerializer(qs, many=True).data)
 
 
-class UserRViewSpecial(RetrieveAPIView):
+class UserRViewSpecial(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
