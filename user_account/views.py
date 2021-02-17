@@ -27,6 +27,13 @@ class UserAccountRUDViewSpecial(RetrieveUpdateDestroyAPIView):
         return Response(UserSerializer(qs).data)
 
 
+class UserAccountUpdateViewSpecial(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    queryset = UserModel.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+
 class UserPostsLCView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = PostModel.objects.all()

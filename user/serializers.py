@@ -25,3 +25,4 @@ class MessengerSerializer(ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'sender': {'read_only': True},
                         'sender_name': {'read_only': True}}
+

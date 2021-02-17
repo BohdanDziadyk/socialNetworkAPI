@@ -5,7 +5,7 @@ from django.db import models
 
 
 def user_directory_path(instance, filename):
-    return os.path.join(f'{instance.user.username}', filename)
+    return os.path.join(f'{instance.username}', 'profile_images', filename)
 
 
 # Create your models here.
@@ -15,7 +15,7 @@ class UserModel(AbstractUser):
 
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20, unique=True)
-    photo = models.ImageField(blank=True, upload_to=user_directory_path)
+    image = models.ImageField(blank=True, upload_to=user_directory_path)
     phone = models.CharField(max_length=13, unique=True)
     friends = models.ManyToManyField("UserModel", blank=True)
 
