@@ -34,6 +34,19 @@ class UserAccountUpdateViewSpecial(RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
 
 
+class UserAccountPasswordChangeView(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    queryset = UserModel.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def update(self, request, *args, **kwargs):
+        user = UserModel.objects.get(id=self.request.user.id)
+        user.set_password(self.request.data.__getitem__('password'))
+        user.save()
+        return Response({'details': 'Password changed'})
+
+
 class UserPostsLCView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = PostModel.objects.all()

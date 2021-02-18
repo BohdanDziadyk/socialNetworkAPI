@@ -17,5 +17,6 @@ urlpatterns = [
     # path('messages/received', MessengerLView.as_view())
     path('messages/<int:pk>', MessengerRUDView.as_view()),
     path('messages/chat/<int:userId>', MessengerChatView.as_view()),
-    path('<int:pk>', UserAccountUpdateViewSpecial.as_view())
+    path('<int:pk>', UserAccountUpdateViewSpecial.as_view()),
+    path('password_change/<int:pk>', UserAccountPasswordChangeView.as_view())
 ]
